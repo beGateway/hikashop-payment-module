@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="3.1" method="upgrade" group="hikashoppayment">
+	<name>HikaShop beGateway payment plugin</name>
+	<creationDate>03 August 2017</creationDate>
+	<version>1.0.0</version>
+	<author>eComCharge</author>
+	<authorEmail>techsupport@ecomcharge.com</authorEmail>
+	<authorUrl>https://ecomcharge.com</authorUrl>
+	<copyright>(C) 2013-2017 eComCharge Ltd SIA. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
+	<description>This plugin enables you to setup payment system running on beGateway platform</description>
+	<files>
+		<filename plugin="begateway">begateway.php</filename>
+		<filename>begateway_end.php</filename>
+		<filename>index.html</filename>
+		<folder>lib</folder>
+	</files>
+  <languages>
+  	<language tag="en-GB">languages/en-GB/en-GB.plg_hikashoppayment_begateway.ini</language>
+  	<language tag="en-GB">languages/en-GB/en-GB.plg_hikashoppayment_begateway.sys.ini</language>
+  	<language tag="ru-RU">languages/ru-RU/ru-RU.plg_hikashoppayment_begateway.ini</language>
+  	<language tag="ru-RU">languages/ru-RU/ru-RU.plg_hikashoppayment_begateway.sys.ini</language>
+	</languages>
+	<params addpath="/components/com_hikashop/params">
+		<param name="pluginoptions" type="pluginoptions" default="plugin" label="hikashop" description="HikaShop options" />
+	</params>
+	<config>
+		<fields name="params" addfieldpath="/components/com_hikashop/fields">
+			<fieldset name="basic">
+				<field id="pluginoptions" name="pluginoptions" type="pluginoptions" label="hikashop" description="HikaShop options" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

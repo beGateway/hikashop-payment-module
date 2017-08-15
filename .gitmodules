@@ -1,0 +1,3 @@
+[submodule "plg_hikashoppayment_begateway/lib/begateway-api-php"]
+	path = plg_hikashoppayment_begateway/lib/begateway-api-php
+	url = https://github.com/beGateway/begateway-api-php.git
