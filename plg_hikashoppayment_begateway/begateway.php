@@ -88,7 +88,7 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
     $token->money->setCurrency($this->currency->currency_code);
     $token->setExpiryDate(date("Y-m-d", ((int)$this->payment_params->ordervalidity+1)*24*3600 + time()) . "T00:00:00+00:00");
     $token->setTrackingId($order->order_id . '|' . $this->user->user_id);
-    $token->setDescription(JText::_('Order') . ' ' . $order->order_number);
+    $token->setDescription(JText::_('BEGATEWAY_ORDER') . ' ' . $order->order_number);
     $token->setLanguage($this->_getLanguage($this->locale));
     $token->setNotificationUrl($notify_url);
     $token->setSuccessUrl($return_url);
