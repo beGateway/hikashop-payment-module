@@ -1,4 +1,4 @@
-[Русская версия](#Модуль-оплаты-begateway-для-joomla-и-hikashop)
+[Русская версия](#Модуль-оплаты-begateway-для-joomla-253x-и-hikashop)
 
 # beGateway payment module for Joomla 2.5/3.x and HikaShop
 
@@ -52,7 +52,7 @@ Then you can use the test data to make a test payment:
 * card expiry __10/30__ to get a failed payment
 * CVC __123__
 
-[English version](#begateway-payment-module-for-joomla-3x-and-joomshopping-4x)
+[English version](#begateway-payment-module-for-joomla-253x-and-hikashop)
 
 # Модуль оплаты beGateway для Joomla 2.5/3.x и HikaShop
 
