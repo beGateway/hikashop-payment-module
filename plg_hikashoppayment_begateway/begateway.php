@@ -1,14 +1,14 @@
 <?php
 /**
  * @package	beGateway for HikaShop for Joomla!
- * @version	1.0.0
+ * @version	1.1.0
  * @author	ecomcharge.com
  * @copyright	(C) 2013-2017 eComCharge Ltd SIA. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
 
-require_once __DIR__ . '/lib/begateway-api-php/lib/beGateway.php';
+require_once __DIR__ . '/lib/begateway-api-php/lib/BeGateway.php';
 
 ?><?php
 class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
@@ -37,6 +37,10 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
 		'shop_id' => array('BEGATEWAY_SHOP_ID', 'input'),
 		'shop_key' => array('BEGATEWAY_SHOP_KEY', 'input'),
 		'domain_checkout' => array('BEGATEWAY_DOMAIN_CHECKOUT', 'input'),
+    'mode' => array('BEGATEWAY_MODE', 'list',array(
+      'live' => 'BEGATEWAY_MODE_LIVE',
+      'test' => 'BEGATEWAY_MODE_TEST',
+    )),
 		'invalid_status' => array('INVALID_STATUS', 'orderstatus'),
 		'pending_status' => array('PENDING_STATUS', 'orderstatus'),
 		'verified_status' => array('VERIFIED_STATUS', 'orderstatus'),
@@ -83,7 +87,7 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
 		$return_url = HIKASHOP_LIVE . 'index.php?option=com_hikashop&ctrl=checkout&task=after_end&order_id='.$order->order_id.$this->url_itemid;
     $notify_url = str_replace('carts.local', 'webhook.begateway.com:8443', $notify_url);
 
-    $token = new \beGateway\GetPaymentToken();
+    $token = new \BeGateway\GetPaymentToken();
     $token->money->setAmount($amount);
     $token->money->setCurrency($this->currency->currency_code);
     $token->setExpiryDate(date("Y-m-d", ((int)$this->payment_params->ordervalidity+1)*24*3600 + time()) . "T00:00:00+00:00");
@@ -94,6 +98,7 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
     $token->setSuccessUrl($return_url);
     $token->setDeclineUrl($return_url);
     $token->setFailUrl($return_url);
+    $token->setTestMode($this->payment_params->mode == 'test');
 
     $token->customer->setFirstName(@$order->cart->billing_address->address_firstname);
     $token->customer->setLastName(@$order->cart->billing_address->address_lastname);
@@ -107,11 +112,9 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
     if (in_array($order->cart->billing_address->address_country->zone_code_2, array('US', 'CA') )) {
       $token->customer->setState($order->cart->billing_address->address_state->zone_name);
     }
-    $token->setAddressHidden();
-
-    \beGateway\Settings::$shopId = $this->payment_params->shop_id;
-    \beGateway\Settings::$shopKey = $this->payment_params->shop_key;
-    \beGateway\Settings::$checkoutBase = 'https://' . $this->payment_params->domain_checkout;
+    \BeGateway\Settings::$shopId = $this->payment_params->shop_id;
+    \BeGateway\Settings::$shopKey = $this->payment_params->shop_key;
+    \BeGateway\Settings::$checkoutBase = 'https://' . $this->payment_params->domain_checkout;
 
     $response = $token->submit();
 
@@ -147,7 +150,7 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
 
 	function onPaymentNotification(&$statuses)
 	{
-    $webhook = new \beGateway\Webhook;
+    $webhook = new \BeGateway\Webhook;
 
 		list($order_id, $user_id) = explode('|', $webhook->getTrackingId());
     $order_id = intval($order_id);
@@ -160,8 +163,8 @@ class plgHikashoppaymentBeGateway extends hikashopPaymentPlugin
 
     $this->loadOrderData($dbOrder);
 
-    \beGateway\Settings::$shopId = $this->payment_params->shop_id;
-    \beGateway\Settings::$shopKey = $this->payment_params->shop_key;
+    \BeGateway\Settings::$shopId = $this->payment_params->shop_id;
+    \BeGateway\Settings::$shopKey = $this->payment_params->shop_key;
 
     if ($webhook->isAuthorized()) {
       $history = new stdClass();
